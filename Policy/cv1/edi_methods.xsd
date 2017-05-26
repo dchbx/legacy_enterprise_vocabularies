@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/edi_methods" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:ins="http://dchealthlink.com/vocabularies/1/insured" xmlns:pln="http://dchealthlink.com/vocabularies/1/plan" xmlns:enr="http://dchealthlink.com/vocabularies/1/enrollment" xmlns:car="http://dchealthlink.com/vocabularies/1/carrier" xmlns:emp="http://dchealthlink.com/vocabularies/1/employer" targetNamespace="http://dchealthlink.com/vocabularies/1/edi_methods" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/insured" schemaLocation="insured.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/plan" schemaLocation="plan.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/carrier" schemaLocation="carrier.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/employer" schemaLocation="employer.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/enrollment" schemaLocation="enrollment.xsd"/>
+	<xs:element name="edi_methods">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="MethodType" abstract="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="benefit_begin_date" type="bt:SimpleDateType" minOccurs="0"/>
+				<xs:element name="benefit_end_date" type="bt:SimpleDateType" minOccurs="0"/>
+				<xs:element name="maintenance_effective_date" type="bt:SimpleDateType" minOccurs="0"/>
+				<xs:element name="maintenance_reason_code" type="MaintenanceReasonCodeType" minOccurs="0"/>
+				<xs:element name="sep_reason" type="xs:string"/>
+				<xs:element name="additional_maintenance_reason" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ChangeCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeleteCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element ref="pln:plan"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CancelCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TerminateCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReinstateCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CorrectCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AuditCoverageType">
+		<xs:sequence>
+			<xs:element name="enrollment_group" type="enr:EnrollmentGroupType"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddMemberType">
+		<xs:sequence>
+			<xs:element ref="enr:enrollment_group"/>
+			<xs:element ref="car:carrier"/>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+			<xs:element name="CarrierPlanIdentification" type="xs:string" nillable="true"/>
+			<xs:element name="PlanExchangeID" type="xs:string" nillable="true"/>
+			<xs:element ref="ins:member" />
+			<xs:element name="StartDate" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpdateMemberType">
+		<xs:sequence>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CancellorTerminateMemberType">
+		<xs:sequence>
+			<xs:element name="request_submit_timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MaintenanceReasonCodeType">
+		<xs:annotation>
+			<xs:documentation>Code specifying reason for the maintenance change</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Divorce"/>
+			<xs:enumeration value="Birth"/>
+			<xs:enumeration value="Death"/>
+			<xs:enumeration value="Retirement"/>
+			<xs:enumeration value="Adoption"/>
+			<xs:enumeration value="Strike"/>
+			<xs:enumeration value="Termination of Benefits"/>
+			<xs:enumeration value="Termination of Employment"/>
+			<xs:enumeration value="Consolidation Omnibus Budget Reconciliation Act (COBRA)"/>
+			<xs:enumeration value="Surviving Spouse"/>
+			<xs:enumeration value="Voluntary Withdrawal"/>
+			<xs:enumeration value="Primary Care Provider (PCP) Change"/>
+			<xs:enumeration value="Quit"/>
+			<xs:enumeration value="Fired"/>
+			<xs:enumeration value="Suspended"/>
+			<xs:enumeration value="Active"/>
+			<xs:enumeration value="Disability"/>
+			<xs:enumeration value="Plan Change"/>
+			<xs:enumeration value="Change in Identifying Data Elements"/>
+			<xs:enumeration value="Declined Coverage"/>
+			<xs:enumeration value="Pre-Enrollment"/>
+			<xs:enumeration value="Initial Enrollment"/>
+			<xs:enumeration value="Benefit Selection"/>
+			<xs:enumeration value="Legal Separation"/>
+			<xs:enumeration value="Marriage"/>
+			<xs:enumeration value="Personnel Data"/>
+			<xs:enumeration value="Leave of Absence with Benefits"/>
+			<xs:enumeration value="Leave of Absence without Benefits"/>
+			<xs:enumeration value="Lay Off with Benefits"/>
+			<xs:enumeration value="Lay Off without Benefits"/>
+			<xs:enumeration value="Re-enrollment"/>
+			<xs:enumeration value="Change of Location"/>
+			<xs:enumeration value="Non Payment"/>
+			<xs:enumeration value="No Reason Given"/>
+			<xs:enumeration value="Member Benefit Selection"/>
+			<xs:enumeration value="Notification Only"/>
+			<xs:enumeration value="Transfer"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/carrier" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:pln="http://dchealthlink.com/vocabularies/1/plan" targetNamespace="http://dchealthlink.com/vocabularies/1/carrier" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/plan" schemaLocation="plan.xsd"/>
+	<xs:element name="carrier">
+		<xs:annotation>
+			<xs:documentation>Health insurance provider</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CarrierType">
+					<xs:sequence>
+						<xs:element ref="pln:plan" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="CarrierType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+      <xs:element name="display_name" type="xs:string" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="fein" type="bt:FederalTaxIdType"/>
+				<xs:element name="exchange_carrier_id" type="bt:HbxIdentifierType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

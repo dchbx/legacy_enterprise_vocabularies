@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema
+  xmlns="http://dchealthlink.com/vocabularies/1/insured"
+  xmlns:car="http://dchealthlink.com/vocabularies/1/carrier"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types"
+  xmlns:con="http://dchealthlink.com/vocabularies/1/contact"
+  xmlns:elg="http://dchealthlink.com/vocabularies/1/eligibility"
+  xmlns:emp="http://dchealthlink.com/vocabularies/1/employer"
+  xmlns:pln="http://dchealthlink.com/vocabularies/1/plan"
+  xmlns:tns="http://dchealthlink.com/vocabularies/1/insured"
+  targetNamespace="http://dchealthlink.com/vocabularies/1/insured"
+  elementFormDefault="qualified"
+  version="0.1">
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/contact" schemaLocation="contacts.xsd"/>
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/plan" schemaLocation="plan.xsd"/>
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/employer" schemaLocation="employer.xsd"/>
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/carrier" schemaLocation="carrier.xsd"/>
+  <xs:element name="eligibility_household" type="EligibilityHouseholdType">
+    <xs:annotation>
+      <xs:documentation>Household considered as a single group for purpose of eligibility determination</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="individual_market_enrollment_group" type="IndividualMarketEnrollmentGroupType">
+    <xs:key name="IndCarrierKey">
+      <xs:selector xpath="tns:carrier/tns:carrier_id"/>
+      <xs:field xpath="."/>
+    </xs:key>
+    <xs:keyref name="IndCarrierKeyRef" refer="IndCarrierKey">
+      <xs:selector xpath="tns:plan/pln:plan/pln:carrier_id_ref"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+    <xs:key name="IndPlanKey">
+      <xs:selector xpath="./tns:plan/tns:plan_id"/>
+      <xs:field xpath="."/>
+    </xs:key>
+    <xs:keyref name="IndPlanKeyRef" refer="IndPlanKey">
+      <xs:selector xpath=".//tns:coverage/tns:plan_id_ref"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+  </xs:element>
+  <xs:element name="shop_market_enrollment_group" type="ShopMarketEnrollmentGroupType">
+    <xs:key name="ShopCarrierKey">
+      <xs:selector xpath="tns:carrier/tns:carrier_id"/>
+      <xs:field xpath="."/>
+    </xs:key>
+    <xs:keyref name="ShopCarrierKeyRef" refer="ShopCarrierKey">
+      <xs:selector xpath="tns:plan/pln:plan/pln:carrier_id_ref"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+    <xs:key name="ShopPlanKey">
+      <xs:selector xpath="tns:plan/tns:plan_id"/>
+      <xs:field xpath="."/>
+    </xs:key>
+    <xs:keyref name="ShopPlanKeyRef" refer="ShopPlanKey">
+      <xs:selector xpath=".//tns:coverage/tns:plan_id_ref"/>
+      <xs:field xpath="."/>
+    </xs:keyref>
+  </xs:element>
+  <xs:element name="subscriber" type="SubscriberType">
+    <xs:annotation>
+      <xs:documentation>Primary member who elects the benefits on behalf of enrollment group</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="member" type="MemberType">
+    <xs:annotation>
+      <xs:documentation>Person entitled to benefits</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="responsible_person">
+    <xs:annotation>
+      <xs:documentation>Person, other than subscriber, who is responsible for member</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="con:person"/>
+        <xs:element name="entity_identifier_code" type="EntityIdentifierCodeType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="responsible_organization">
+    <xs:annotation>
+      <xs:documentation>Organization, other than subscriber, who is responsible for
+        member</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="con:person"/>
+        <xs:element name="entity_identifier_code" type="EntityIdentifierCodeType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="exchange" type="ExchangeType"/>
+  <xs:complexType name="ExchangeType">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" default="DC HealthLink"/>
+      <xs:element name="fein" type="bt:FederalTaxIdType" default="46-1542132"/>
+      <xs:element name="cms_source_exchange_id" type="xs:string" default="DC0"/>
+      <xs:element name="exchange_rating_area" default="R-DC001">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="R-DC001"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EligibilityHouseholdType">
+    <xs:sequence>
+      <xs:element name="aptc_amount_total" type="bt:CurrencyType"/>
+      <xs:element name="csr_amount_total" type="bt:CurrencyType"/>
+      <xs:element ref="individual_market_enrollment_group" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EnrollmentGroupType" abstract="true">
+    <xs:sequence>
+      <xs:element ref="exchange" minOccurs="0"/>
+      <xs:element name="broker" type="BrokerType" nillable="true" minOccurs="0"/>
+      <xs:element name="exchange_policy_id" type="bt:HbxIdentifierType"/>
+      <xs:element ref="subscriber" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="member" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IndividualMarketEnrollmentGroupType">
+    <xs:complexContent>
+      <xs:extension base="EnrollmentGroupType">
+        <xs:sequence>
+          <xs:element ref="responsible_person" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="carrier" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="car:carrier"/>
+                <xs:element name="carrier_id" type="xs:string"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="plan" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="pln:plan"/>
+                <xs:element name="plan_id" type="xs:string"/>
+                <xs:element name="premium_amount_total" type="bt:CurrencyType"/>
+                <xs:element name="aptc_amount" type="bt:CurrencyType"/>
+                <xs:element name="csr_amount" type="bt:CurrencyType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="other_payment_amount" type="bt:CurrencyType" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="total_responsible_amount" type="bt:CurrencyType">
+                  <xs:annotation>
+                    <xs:documentation>Total amount owed by enrollment group</xs:documentation>
+                    <xs:documentation>total_responsible_amount = premium_amount_total - aptc_amount - other_payment_amount</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ShopMarketEnrollmentGroupType">
+    <xs:complexContent>
+      <xs:extension base="EnrollmentGroupType">
+        <xs:sequence>
+          <xs:element ref="emp:employer"/>
+          <xs:element name="carrier" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="car:carrier"/>
+                <xs:element name="carrier_id" type="xs:string"/>
+
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="plan" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="pln:plan"/>
+                <xs:element name="plan_id" type="bt:HbxIdentifierType"/>
+                <xs:element name="premium_amount_total" type="bt:CurrencyType"/>
+                <xs:element name="total_employer_responsibility_amount" type="bt:CurrencyType"/>
+                <xs:element name="total_responsible_amount" type="bt:CurrencyType">
+                  <xs:annotation>
+                    <xs:documentation>Total amount owed by enrollment group</xs:documentation>
+                    <xs:documentation>total_responsible_amount = premium_amount_total - total_employer_responsibility_amount</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BrokerType">
+    <xs:sequence>
+      <xs:element name="broker_name" type="xs:string" nillable="true"/>
+      <xs:element name="broker_npn" type="xs:string" nillable="true"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="EntityIdentifierCodeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Custodial Parent"/>
+      <xs:enumeration value="Case Manager"/>
+      <xs:enumeration value="Key Person"/>
+      <xs:enumeration value="Person or Other Entity Legally Responsible for a Child"/>
+      <xs:enumeration value="Executor of Estate"/>
+      <xs:enumeration value="Ex-spouse"/>
+      <xs:enumeration value="Other insured"/>
+      <xs:enumeration value="Guardian"/>
+      <xs:enumeration value="Power of Attorney"/>
+      <xs:enumeration value="Legal Representative"/>
+      <xs:enumeration value="Responsible Party"/>
+      <xs:enumeration value="Parent"/>
+      <xs:enumeration value="Significant Other"/>
+      <xs:enumeration value="Spouse"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="MemberType">
+    <xs:annotation>
+      <xs:documentation>Person entitled to benefits</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="con:person"/>
+      <xs:element name="exchange_member_id" type="bt:HbxIdentifierType"/>
+      <xs:element name="carrier_member_id" type="bt:HbxIdentifierType" minOccurs="0"/>
+      <xs:element name="individual_relationship_code">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation>Code indicating relationship between primary coverage
+              person (subscriber) and this member.</xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Spouse"/>
+            <xs:enumeration value="Father or Mother"/>
+            <xs:enumeration value="Grandfather or Grandmother"/>
+            <xs:enumeration value="Grandson or Granddaughter"/>
+            <xs:enumeration value="Uncle or Aunt"/>
+            <xs:enumeration value="Nephew or Niece"/>
+            <xs:enumeration value="Cousin"/>
+            <xs:enumeration value="Adopted Child"/>
+            <xs:enumeration value="Foster Child"/>
+            <xs:enumeration value="Son-in-law or Daughter-in-law"/>
+            <xs:enumeration value="Brother-in-law or Sister-in-law"/>
+            <xs:enumeration value="Mother-in-law or Father-in-law"/>
+            <xs:enumeration value="Brother or Sister"/>
+            <xs:enumeration value="Ward"/>
+            <xs:enumeration value="Stepparent"/>
+            <xs:enumeration value="Stepson or Stepdaughter"/>
+            <xs:enumeration value="Self"/>
+            <xs:enumeration value="Child"/>
+            <xs:enumeration value="Sponsored Dependent"/>
+            <xs:enumeration value="Dependent of a Minor Dependent"/>
+            <xs:enumeration value="Ex-spouse"/>
+            <xs:enumeration value="Guardian"/>
+            <xs:enumeration value="Court Appointed Guardian"/>
+            <xs:enumeration value="Collateral Dependent"/>
+            <xs:enumeration value="Life Partner"/>
+            <xs:enumeration value="Annuitant"/>
+            <xs:enumeration value="Trustee"/>
+            <xs:enumeration value="Other Relationship"/>
+            <xs:enumeration value="Other Relative"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="benefit_status_code" minOccurs="0">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation>Code indicating type of coverage under which benefits are
+              paid</xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Active"/>
+            <xs:enumeration value="COBRA"/>
+            <xs:enumeration value="Surviving Insured"/>
+            <xs:enumeration value="TEFRA"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DOB" type="bt:SimpleDateType"/>
+      <xs:element name="SSN" type="bt:FederalTaxIdType" minOccurs="0"/>
+      <xs:element name="gender_code">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="male"/>
+            <xs:enumeration value="female"/>
+            <xs:enumeration value="unknown"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="race_or_ethnicity_code" minOccurs="0" maxOccurs="10">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation>Code indicating racial or ethnic background of the member</xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Not Provided"/>
+            <xs:enumeration value="Not Applicable"/>
+            <xs:enumeration value="Asian or Pacific Islander"/>
+            <xs:enumeration value="Black"/>
+            <xs:enumeration value="Caucasian"/>
+            <xs:enumeration value="Subcontinent Asian American"/>
+            <xs:enumeration value="Other Race or Ethnicity"/>
+            <xs:enumeration value="Asian Pacific American"/>
+            <xs:enumeration value="Native American"/>
+            <xs:enumeration value="Hispanic"/>
+            <xs:enumeration value="American Indian or Alaskan Native"/>
+            <xs:enumeration value="Native Hawaiian"/>
+            <xs:enumeration value="Black (Non-Hispanic)"/>
+            <xs:enumeration value="White (Non-Hispanic)"/>
+            <xs:enumeration value="Pacific Islander"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="tobacco_use" default="Unknown">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation>Code indicating tobacco use. DC uses value U (unknown) only</xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Unknown"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="language" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>ISO 639-1 (part 1) language code</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="coverage" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="plan_id_ref" type="bt:HbxIdentifierType"/>
+            <xs:element name="premium_amount" type="bt:CurrencyType"/>
+            <xs:element name="benefit_begin_date" type="bt:SimpleDateType" minOccurs="0"/>
+            <xs:element name="benefit_end_date" type="bt:SimpleDateType" minOccurs="0"/>
+            <xs:element name="carrier_policy_id" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubscriberType">
+    <xs:annotation>
+      <xs:documentation>Primary member who elects the benefits on behalf of enrollment group</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="MemberType">
+        <xs:sequence>
+          <xs:element name="employment_status_code" minOccurs="0">
+            <xs:simpleType>
+              <xs:annotation>
+                <xs:documentation>Required for subscriber. For SHOP market, use employment
+                  status code. For individual market, use only AC=Active or
+                  TE=Terminated.</xs:documentation>
+              </xs:annotation>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Active"/>
+                <xs:enumeration value="Active Military - Overseas"/>
+                <xs:enumeration value="Active Military - USA"/>
+                <xs:enumeration value="Full-time"/>
+                <xs:enumeration value="Leave of Absence"/>
+                <xs:enumeration value="Part-time"/>
+                <xs:enumeration value="Retired"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

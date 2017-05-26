@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/contact" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" targetNamespace="http://dchealthlink.com/vocabularies/1/contact" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:element name="person" type="PersonType"/>
+	<xs:complexType name="PersonType">
+		<xs:sequence>
+			<xs:element name="name_prefix" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_first" type="xs:string"/>
+			<xs:element name="name_middle" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_last" type="xs:string"/>
+			<xs:element name="name_suffix" type="xs:string" minOccurs="0"/>
+			<xs:element name="phone" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="phone_type">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="home"/>
+									<xs:enumeration value="work"/>
+									<xs:enumeration value="mobile"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="phone_number" type="bt:TelephoneNumberType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="email" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="email_type">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="home"/>
+									<xs:enumeration value="work"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="email_address" type="bt:EmailType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="address" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="address_type">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="home"/>
+									<xs:enumeration value="work"/>
+                                                                        <xs:enumeration value="mailing"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="address" type="bt:AddressType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

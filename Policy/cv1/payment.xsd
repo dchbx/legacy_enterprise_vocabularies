@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/payment" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:enr="http://dchealthlink.com/vocabularies/1/enrollment" xmlns:car="http://dchealthlink.com/vocabularies/1/carrier" xmlns:emp="http://dchealthlink.com/vocabularies/1/employer" targetNamespace="http://dchealthlink.com/vocabularies/1/payment" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/carrier" schemaLocation="carrier.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/employer" schemaLocation="employer.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/enrollment" schemaLocation="enrollment.xsd"/>
+	<xs:element name="payment">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="ChangeEffectiveDate" type="xs:dateTime"/>
+				<xs:element name="billing_start_date" type="bt:SimpleDateType"/>
+				<xs:element name="billing_end_date" type="bt:SimpleDateType"/>
+				<xs:element name="carrier_to_bill" type="CarrierToBillType"/>
+				<xs:element minOccurs="0" name="BillingPreference" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="PaymentPreference" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="ach_info" nillable="true" type="AchType"/>
+				<xs:element minOccurs="0" name="credit_card_info" nillable="true" type="CreditCardType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="AchType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="AccountName" nillable="true" type="xs:string"/>
+			<xs:element name="AccountNumber" nillable="true" type="xs:string"/>
+			<xs:element name="AccountType" nillable="true" type="xs:string"/>
+			<xs:element minOccurs="0" name="BankName" nillable="true" type="xs:string"/>
+			<xs:element name="BankRoutingNumber" nillable="true" type="xs:string"/>
+			<xs:element name="CustomerID" type="xs:int"/>
+			<xs:element name="ExchangeID" nillable="true" type="xs:string"/>
+			<xs:element name="ExchangeType" nillable="true" type="xs:string"/>
+			<xs:element name="ParentEntityType" nillable="true" type="xs:string"/>
+			<xs:element minOccurs="0" name="StartDate" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CreditCardType">
+		<xs:sequence>
+			<xs:element name="CustomerID" type="xs:int"/>
+			<xs:element name="ExchangeType" nillable="true" type="xs:string"/>
+			<xs:element name="ParentEntityType" nillable="true" type="xs:string"/>
+			<xs:element name="ExchangeID" nillable="true" type="xs:string"/>
+			<xs:element minOccurs="0" name="StartDate" type="xs:dateTime"/>
+			<xs:element name="IsPrimary" type="xs:boolean"/>
+			<xs:element minOccurs="0" name="RecurringCreditCardID" type="xs:int"/>
+			<xs:element name="CardNetwork" nillable="true" type="xs:string"/>
+			<xs:element name="CardNumber" nillable="true" type="xs:string"/>
+			<xs:element name="CVV2CVC2" nillable="true" type="xs:string"/>
+			<xs:element name="ExpirationDateMonth" type="xs:int"/>
+			<xs:element name="ExpirationDateYear" type="xs:int"/>
+			<xs:element name="BillingName" nillable="true" type="xs:string"/>
+			<xs:element name="BillingStreet" nillable="true" type="xs:string"/>
+			<xs:element name="BillingCity" nillable="true" type="xs:string"/>
+			<xs:element name="BillingState" nillable="true" type="xs:string"/>
+			<xs:element name="BillingZip" nillable="true" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="CreditCard" nillable="true" type="CreditCardType"/>
+	<xs:simpleType name="CarrierToBillType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TRUE"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

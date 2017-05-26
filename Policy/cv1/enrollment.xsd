@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/enrollment"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ins="http://dchealthlink.com/vocabularies/1/insured"
+           xmlns:emp="http://dchealthlink.com/vocabularies/1/employer"
+           targetNamespace="http://dchealthlink.com/vocabularies/1/enrollment" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/insured" schemaLocation="insured.xsd"/>
+  	<xs:import namespace="http://dchealthlink.com/vocabularies/1/employer" schemaLocation="employer.xsd"/>
+
+  <xs:element name="initial_enrollment">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="ins:individual_market_enrollment_group"/>
+        <xs:element ref="employer_initial_enrollment"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="employer_initial_enrollment">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="emp:employer"/>
+      <xs:element ref="ins:shop_market_enrollment_group" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+</xs:schema>

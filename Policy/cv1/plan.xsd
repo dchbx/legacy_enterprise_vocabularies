@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/plan" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:car="http://dchealthlink.com/vocabularies/1/carrier" targetNamespace="http://dchealthlink.com/vocabularies/1/plan" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/carrier" schemaLocation="carrier.xsd"/>
+	<xs:element name="plan" type="PlanType"/>
+	<xs:complexType name="PlanType">
+		<xs:sequence>
+			<xs:element name="carrier_id_ref" type="bt:HbxIdentifierType"/>
+			<xs:element name="hios_plan_id" type="xs:string"/>
+			<xs:element name="plan_name" type="xs:string"/>
+			<xs:element name="exchange_plan_id" type="xs:string" minOccurs="0"/>
+			<xs:element name="carrier_plan_id" type="xs:string" minOccurs="0"/>
+			<xs:element name="carrier_employer_group_id" type="xs:string" minOccurs="0"/>
+			<xs:element name="coverage_type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:annotation>
+							<xs:documentation>Code identifying a group of insurance products</xs:documentation>
+						</xs:annotation>
+						<xs:enumeration value="Dental"/>
+						<xs:enumeration value="Health"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="metal_level" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/eligibility" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:ins="http://dchealthlink.com/vocabularies/1/insured" xmlns:pln="http://dchealthlink.com/vocabularies/1/plan" xmlns:enr="http://dchealthlink.com/vocabularies/1/enrollment" xmlns:car="http://dchealthlink.com/vocabularies/1/carrier" xmlns:emp="http://dchealthlink.com/vocabularies/1/employer" targetNamespace="http://dchealthlink.com/vocabularies/1/eligibility" elementFormDefault="qualified" version="0.1">
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/insured" schemaLocation="insured.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/plan" schemaLocation="plan.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/carrier" schemaLocation="carrier.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/employer" schemaLocation="employer.xsd"/>
+	<xs:import namespace="http://dchealthlink.com/vocabularies/1/enrollment" schemaLocation="enrollment.xsd"/>
+	<xs:element name="eligibility_household" type="EligibilityHouseholdType">
+		<xs:annotation>
+			<xs:documentation>Household considered as a single group for purpose of eligibility determination</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="EligibilityHouseholdType">
+		<xs:sequence>
+			<xs:element name="source_exchange_id" type="xs:string" default="DC0"/>
+			<xs:element name="rating_area" type="xs:string" default="R-DC001"/>
+			<xs:element name="aptc_amount_total" type="bt:CurrencyType"/>
+			<xs:element name="csr_amount_total" type="bt:CurrencyType"/>
+			<xs:element ref="ins:individual_market_enrollment_group"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

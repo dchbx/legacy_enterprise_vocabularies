@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns="http://dchealthlink.com/vocabularies/1/process"
+  targetNamespace="http://dchealthlink.com/vocabularies/1/process"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types"
+  xmlns:ins="http://dchealthlink.com/vocabularies/1/insured"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/base_types" schemaLocation="base_types.xsd"/> 
+  <xs:import namespace="http://dchealthlink.com/vocabularies/1/insured" schemaLocation="insured.xsd"/>
+  <xs:element name="Process">
+    <xs:annotation>
+      <xs:documentation>Business process supporting DCHBX operations</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Operation" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>    
+  </xs:element>
+
+  <xs:element name="Operation">
+    <xs:annotation>
+      <xs:documentation>Operation to perform on an enrollment group.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="operation" type="OperationType"/>
+        <xs:element name="payload" type="PayloadType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OperationType">
+    <xs:sequence>
+      <xs:element name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="change"/>
+            <xs:enumeration value="add"/>
+            <xs:enumeration value="cancel"/>
+            <xs:enumeration value="terminate"/>
+            <xs:enumeration value="reinstate"/>
+            <xs:enumeration value="audit"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="reason">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="birth"/>
+            <xs:enumeration value="adoption"/>
+            <xs:enumeration value="death"/>
+            <xs:enumeration value="marriage"/>
+            <xs:enumeration value="divorce"/>
+            <xs:enumeration value="age_off"/>
+            <xs:enumeration value="initial_enrollment"/>
+            <xs:enumeration value="sep_initial_enrollment"/>
+            <xs:enumeration value="termination_of_benefits"/>
+            <xs:enumeration value="plan_change"/>
+            <xs:enumeration value="personnel_data"/>
+            <xs:enumeration value="benefit_selection"/>
+            <xs:enumeration value="change_of_location"/>
+            <xs:enumeration value="change_in_identifying_data_elements"/>
+            <xs:enumeration value="reenrollment"/>
+            <xs:enumeration value="shop_premium_change"/>
+            <xs:enumeration value="eligibility"/>
+            <xs:enumeration value="non_payment"/>
+            <xs:enumeration value="no_reason_given"/>
+            <xs:enumeration value="relationship_change"/>
+            <xs:enumeration value="notification_only"/>
+            <xs:enumeration value="renewal"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="affected_members">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="member_id" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="PayloadType">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element ref="ins:shop_market_enrollment_group"/>
+        <xs:element ref="ins:individual_market_enrollment_group"/>
+      </xs:choice>
+      <xs:element name="previous_records" type="PreviousRecordsList" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="PreviousRecordsList">
+    <xs:sequence>
+      <xs:element name="previous_record" type="PreviousRecordType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="PreviousRecordType">
+    <xs:sequence>
+      <xs:element name="member_id" type="bt:HbxIdentifierType"/>
+      <xs:element name="previous_name" type="PreviousNameType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="previous_DOB" type="bt:SimpleDateType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="previous_SSN" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="previous_gender_code" minOccurs="0" maxOccurs="1">        
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="male"/>
+            <xs:enumeration value="female"/>
+            <xs:enumeration value="unknown"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="PreviousNameType">
+    <xs:sequence>
+			<xs:element name="name_first" type="xs:string"/>
+			<xs:element name="name_middle" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_last" type="xs:string"/>
+      <xs:element name="name_prefix" type="xs:string" minOccurs="0"/>
+      <xs:element name="name_suffix" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

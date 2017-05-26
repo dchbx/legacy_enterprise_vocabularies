@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabularies/1/base_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://dchealthlink.com/vocabularies/1/base_types" elementFormDefault="qualified" version="0.1">
+	<xs:simpleType name="SimpleDateType">
+		<xs:annotation>
+			<xs:documentation>A simple date with no timezone context.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([1-9][0-9]{3})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FederalTaxIdType">
+		<xs:annotation>
+			<xs:documentation>IRS-assigned ID. Matches: 01-1234567, 011234567, 123-45-6789</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]{3}-[0-9]{2}-[0-9]{4})|([0-9]{9})|([0-9]{2}-[0-9]{7})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TelephoneNumberType">
+		<xs:annotation>
+			<xs:documentation>US Telephone number format. Matches: (999)999-9999, 9999999999, 999-999-9999</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EmailType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="CurrencyType">
+		<xs:annotation>
+			<xs:documentation>Money amount. As this can be transactional, we allow negative values.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SimpleDateRangeType">
+		<xs:sequence>
+			<xs:element name="start" type="SimpleDateType"/>
+			<xs:element name="end" type="SimpleDateType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddressType">
+		<xs:sequence>
+			<xs:element name="address_1" type="xs:string"/>
+			<xs:element name="address_2" type="xs:string" minOccurs="0"/>
+			<xs:element name="city" type="xs:string"/>
+			<xs:element name="state" type="xs:string"/>
+			<xs:element name="zipcode" type="xs:string"/>
+			<xs:element name="position" type="PositionPointType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+  <xs:simpleType name="HbxIdentifierType">
+      <xs:restriction base="xs:string">
+        <xs:minLength value="1"/>
+      </xs:restriction>
+  </xs:simpleType>
+	<xs:complexType name="PositionPointType">
+		<xs:annotation>
+			<xs:documentation>GeoJSON Point.  See: http://www.geojson.org/geojson-spec.html#positions</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="x" type="xs:float"/>
+			<xs:element name="y" type="xs:float"/>
+			<xs:element name="z" type="xs:float" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
