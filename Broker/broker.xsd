@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Dan Thomas (DC Health Benefit Exchange) -->
+<xs:schema xmlns="urn:dchbx:brokerv1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xc="urn:ietf:params:xml:ns:vcard-4.0" targetNamespace="urn:dchbx:brokerv1" elementFormDefault="qualified">
+	<xs:import namespace="urn:ietf:params:xml:ns:vcard-4.0" schemaLocation="Xcard.xsd"/>
+	<xs:element name="brokers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="broker" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="broker">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="insurance_expiration_date" minOccurs="0"/>
+				<xs:element ref="associated_agency_name" minOccurs="0"/>
+				<xs:element ref="associated_agency_fein" minOccurs="0"/>
+				<xs:element ref="npn"/>
+				<xs:element ref="license" minOccurs="0"/>
+				<xs:element ref="xc:vcard"/>
+				<xs:element ref="exchange_id"/>
+				<xs:element ref="exchange_status"/>
+				<xs:element ref="exchange_version"/>
+				<xs:elememt name="broker_payment_accounts" type="BrokerPaymentAccountsType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="exchange_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>DCHBX identifier for this broker</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="renewal_date">
+		<xs:annotation>
+			<xs:documentation>Insurance renewal date</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:date"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="state">
+		<xs:annotation>
+			<xs:documentation>State or other certifying authority</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="effective_date">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="renewal_date"/>
+				<xs:element ref="cancellation_date"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="cancellation_date">
+		<xs:simpleType>
+			<xs:restriction base="xs:date"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="insurance_expiration_date" type="xs:date"/>
+	<xs:element name="associated_agency_name" type="xs:string"/>
+	<xs:element name="associated_agency_fein">
+		<xs:annotation>
+			<xs:documentation>Federal Employer Identification Number</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="npn" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>National Producer Number (Broker license number)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="license">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="license_number"/>
+				<xs:element ref="state" minOccurs="0"/>
+				<xs:element ref="effective_date" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tpa_fein">
+		<xs:annotation>
+			<xs:documentation>Third Party Administrator Federal Employer Identification Number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="license_number">
+		<xs:annotation>
+			<xs:documentation>State license number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ga_fein">
+		<xs:annotation>
+			<xs:documentation>General Agent Federal Employer Identification Number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="status">
+		<xs:annotation>
+			<xs:documentation>Employer status on the DCHBX</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="active"/>
+			<xs:enumeration value="inactive"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="exchange_status" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Broker status on the DCHBX</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="exchange_version" default="1" nillable="false">
+		<xs:annotation>
+			<xs:documentation>DCHBX version number of this record</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:int"/>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:complexType name="BrokerPaymentAccountsType">
+		<xs:sequence>
+			<xs:element name="broker_payment_account" type="BrokerPaymentAccountType" minOccurs="1" maxOccurs="unbounded"/>
+	        </xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="BrokerPaymentAccountType">
+		<xs:annotation>
+                	<xs:documentation>Describes account payment information for brokers.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="routing_number" type="xs:string"/>
+			<xs:element name="account_number" type="xs:string"/>
+			<xs:element name="account_active_on" type="xs:date"/>
+			<xs:element name="account_inactive_on" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
