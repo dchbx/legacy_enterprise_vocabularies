@@ -69,6 +69,8 @@
 			<xs:sequence>
 				<xs:element ref="npn_id"/>
 				<xs:element ref="tpa_ga_fein" minOccurs="0"/>
+				<xs:element name="assignment_start_on" type="xs:date" minOccurs="0"/>
+				<xs:element name="assignment_end_on" type="xs:date" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
