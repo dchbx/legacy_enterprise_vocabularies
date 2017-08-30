@@ -21,7 +21,7 @@
 				<xs:element ref="exchange_id"/>
 				<xs:element ref="exchange_status"/>
 				<xs:element ref="exchange_version"/>
-				<xs:elememt name="broker_payment_accounts" type="BrokerPaymentAccountsType" minOccurs="0"/>
+				<xs:element name="broker_payment_accounts" type="BrokerPaymentAccountsType" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
